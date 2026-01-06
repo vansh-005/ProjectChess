@@ -1,42 +1,28 @@
-import axios from 'axios';
+const API_BASE = 'http://localhost:8080';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-export const API_BASE = `${BACKEND_URL}/api`;
-
-// Axios instance
-const apiClient = axios.create({
-  baseURL: API_BASE,
-  timeout: 10000,
-  headers: {
+export const apiClient = async (
+    endpoint,
+    { method = 'GET', body, token } = {}
+) => {
+  const headers = {
     'Content-Type': 'application/json',
-  },
-});
+  };
 
-// Request interceptor
-apiClient.interceptors.request.use(
-  (config) => {
-    // TODO: Add auth token when implemented
-    // const token = localStorage.getItem('auth_token');
-    // if (token) {
-    //   config.headers.Authorization = `Bearer ${token}`;
-    // }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
   }
-);
 
-// Response interceptor
-apiClient.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    // TODO: Handle specific error cases
-    // if (error.response?.status === 401) {
-    //   // Handle unauthorized
-    // }
-    return Promise.reject(error);
+  const res = await fetch(`${API_BASE}${endpoint}`, {
+    method,
+    headers,
+    body: body ? JSON.stringify(body) : undefined,
+    credentials: 'include', // safe even if unused
+  });
+
+  if (!res.ok) {
+    throw new Error(`HTTP ${res.status}`);
+
   }
-);
 
-export default apiClient;
+  return res.json();
+};

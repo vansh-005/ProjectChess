@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Bell, User, Menu, X } from 'lucide-react';
-import { useAuth } from '@/app/providers';
+import { useAuth } from '@/app/providers/AuthProvider';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -12,6 +12,9 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
+import logo from "@/assets/logo.png";
+
+
 
 export const Navbar = () => {
   const location = useLocation();
@@ -21,7 +24,7 @@ export const Navbar = () => {
 
   const navItems = [
     { path: '/', label: 'Home' },
-    { path: '/tournament/1', label: 'Tournaments' },
+    { path: '/tournaments', label: 'Tournaments' },
     { path: '/top-players', label: 'Top Players' },
   ];
 
@@ -30,22 +33,32 @@ export const Navbar = () => {
     return location.pathname.startsWith(path);
   };
 
-  const handleLogin = () => {
-    // Mock login
-    login({ email: 'user@example.com', password: 'password' });
+  const handleLogin = async () => {
+    try {
+      await login({
+        username: 'v2', // temporary
+        password: '123',
+      });
+    } catch (err) {
+      console.error('Login failed', err);
+    }
   };
+
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-accent">
-              <span className="text-xl font-bold text-primary-foreground">♔</span>
-            </div>
-            <span className="text-xl font-bold text-foreground hidden sm:inline-block">ChessHub</span>
+          <Link to="/" className="flex items-center justify-center space-x-1">
+            {/*<div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-accent">*/}
+              <img src={logo} alt="ChessHub logo" className="h-12 w-12" />
+            {/*</div>*/}
+            <span className="text-xl font-bold text-foreground hidden sm:inline-block">
+              ChessHub
+           </span>
           </Link>
+
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-1">
@@ -92,7 +105,7 @@ export const Navbar = () => {
                     <Button variant="ghost" className="relative h-10 w-10 rounded-full">
                       <Avatar className="h-10 w-10 border-2 border-primary/20">
                         <AvatarFallback className="bg-primary/10 text-primary font-semibold">
-                          {user.username.slice(0, 2).toUpperCase()}
+                          {(user?.username || 'U').slice(0, 2).toUpperCase()}
                         </AvatarFallback>
                       </Avatar>
                     </Button>
@@ -100,13 +113,16 @@ export const Navbar = () => {
                   <DropdownMenuContent align="end" className="w-56">
                     <div className="flex items-center justify-start gap-2 p-2">
                       <div className="flex flex-col space-y-1">
-                        <p className="text-sm font-medium">{user.username}</p>
-                        <p className="text-xs text-muted-foreground">
-                          {user.title} • {user.rating}
+                        <p className="text-sm font-medium">
+                          {user.username ?? 'Unknown User'}
                         </p>
+                        <p className="text-xs text-muted-foreground">
+                          {user.title ?? '—'} • {user.rating ?? '—'}
+                        </p>
+
                       </div>
                     </div>
-                    <DropdownMenuSeparator />
+                    <DropdownMenuSeparator/>
                     <DropdownMenuItem asChild>
                       <Link to="/me" className="cursor-pointer">
                         <User className="mr-2 h-4 w-4" />

@@ -8,12 +8,14 @@ import Tournament from '@/pages/Tournament/Tournament';
 import Game from '@/pages/Game/Game';
 import TopPlayers from '@/pages/TopPlayers/TopPlayers';
 import Me from '@/pages/Me/Me';
+import Tournaments from "@/pages/Tounraments/Tournaments";
 
 export const AppRouter = () => {
   return (
     <Routes>
       <Route path="/" element={<PageShell />}>
         <Route index element={<Home />} />
+        <Route path="tournaments" element={<Tournaments/>} />
         <Route path="tournament/:id" element={<Tournament />} />
         <Route path="game/:id" element={<Game />} />
         <Route path="top-players" element={<TopPlayers />} />
