@@ -1,34 +1,28 @@
-.App-logo {
-    height: 40vmin;
-    pointer-events: none;
+/* Background grid pattern for hero section */
+.bg-grid-pattern {
+    background-image: 
+        linear-gradient(to right, hsl(var(--border)) 1px, transparent 1px),
+        linear-gradient(to bottom, hsl(var(--border)) 1px, transparent 1px);
+    background-size: 40px 40px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-    .App-logo {
-        animation: App-logo-spin infinite 20s linear;
-    }
+/* Smooth page transitions */
+.page-enter {
+    opacity: 0;
+    transform: translateY(20px);
 }
 
-.App-header {
-    background-color: #0f0f10;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
-    color: white;
+.page-enter-active {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 300ms, transform 300ms;
 }
 
-.App-link {
-    color: #61dafb;
+.page-exit {
+    opacity: 1;
 }
 
-@keyframes App-logo-spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
+.page-exit-active {
+    opacity: 0;
+    transition: opacity 300ms;
 }
